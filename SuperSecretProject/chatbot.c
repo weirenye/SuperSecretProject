@@ -174,7 +174,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	//load
 	int iSuccess = 1;
 	int iLines;
-	char* filename;
+	char* filename = NULL;
 	if ((sizeof(inv) / sizeof(inv[0])) < 1)
 		iSuccess = 0;
 
@@ -303,7 +303,7 @@ int chatbot_is_save(const char *intent) {
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	//load
 	int iSuccess = 1;
-	char* filename;
+	char* filename = NULL;
 	if ((sizeof(inv) / sizeof(inv[0])) < 1)
 		iSuccess = 0;
 
