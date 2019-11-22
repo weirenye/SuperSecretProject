@@ -83,7 +83,7 @@ int knowledge_read(FILE *f) {
  * Reset the knowledge base, removing all know entitities from all intents.
  */
 void knowledge_reset() {
-	
+	//mabel
 	/* to be implemented */
 	
 }
