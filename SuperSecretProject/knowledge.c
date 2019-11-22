@@ -73,10 +73,9 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
  * Returns: the number of entity/response pairs successful read from the file
  */
 int knowledge_read(FILE *f) {
+	//ian
 	
-	/* to be implemented */
-	
-	return 0;
+	return 12;
 }
 
 
@@ -96,8 +95,9 @@ void knowledge_reset() {
  * Input:
  *   f - the file
  */
-void knowledge_write(FILE *f) {
-	
-	/* to be implemented */
-	
+int knowledge_write(FILE *f) {
+	//ian will do
+	//return 1 = success
+	//return 0 = fail
+	return 1;
 }
