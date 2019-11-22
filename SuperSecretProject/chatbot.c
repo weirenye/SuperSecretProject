@@ -190,12 +190,24 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
  *  1, if the intent is "what", "where", or "who"
  *  0, otherwise
  */
-int chatbot_is_question(const char *intent) {
-	
+int chatbot_is_question(const char* intent) {
+
+	char* isintent;
+	isintent = intent;
+	/*
+	for (int i = 0; i < strlen(intent);i++) {
+		isintent[i] = tolower(isintent[i]);
+	}
+	*/
+
 	/* to be implemented */
-	
-	return 0;
-	
+	if (!compare_token(isintent, "what") || !compare_token(isintent, "where") || !compare_token(isintent, "who")) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+
 }
 
 
@@ -212,12 +224,29 @@ int chatbot_is_question(const char *intent) {
  * Returns:
  *   0 (the chatbot always continues chatting after a question)
  */
-int chatbot_do_question(int inc, char *inv[], char *response, int n) {
-	
+int chatbot_do_question(int inc, char* inv[], char* response, int n) {
+	char* ins;
+	int inv1 = 0;
 	/* to be implemented */
-	 
+	if (!compare_token(inv[1], "is") || !compare_token(inv[1], "are")) {
+		inv1 = 1;
+	}
+	if (inv1 == 1) {
+		ins = &(inv[2]);
+		for (int i = 3; i < inc; i++) {
+			strcat(ins, inv[i]);
+		}
+	}
+	else {
+		ins = &(inv[1]);
+		for (int i = 2; i < inc; i++) {
+			strcat(ins, inv[i]);
+		}
+	}
+	knowledge_get(inv[0], ins, response, strlen(ins));
+
 	return 0;
-	 
+
 }
 
 
