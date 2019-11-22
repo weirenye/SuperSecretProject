@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
 	char output[MAX_RESPONSE];  /* the chatbot's output */
 	int len;                    /* length of a word */
 	int done = 0;               /* set to 1 to end the main loop */
+	Knowlege head = { NULL, NULL, NULL, NULL };
 	
 	/* initialise the chatbot */
 	inv[0] = "reset";
@@ -64,7 +65,7 @@ int main(int argc, char *argv[]) {
 		} while (inc < 1);
 		
 		/* invoke the chatbot */
-		done = chatbot_main(inc, inv, output, MAX_RESPONSE);
+		done = chatbot_main(inc, inv, output, MAX_RESPONSE, &head);
 		printf("%s: %s\n", chatbot_botname(), output);
 		
 	} while (!done);

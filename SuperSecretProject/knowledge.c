@@ -31,6 +31,15 @@
  *   KB_NOTFOUND, if no response could be found
  *   KB_INVALID, if 'intent' is not a recognised question word
  */
+
+struct sknow {
+	char intent[5];
+	char entity[50];
+	char value[50];
+	struct sknow* next;
+};
+typedef struct sknow Knowlege;
+
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
 	/* to be implemented */
