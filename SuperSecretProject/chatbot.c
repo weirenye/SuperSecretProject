@@ -194,7 +194,6 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	free(buffer);
 
 	return 0;
-	 
 }
 
 
@@ -302,11 +301,28 @@ int chatbot_is_save(const char *intent) {
  *   0 (the chatbot always continues chatting after saving knowledge)
  */
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
-	
-	//ian will do this
-	
+	//load
+	int iSuccess = 1;
+	char* filename;
+	if ((sizeof(inv) / sizeof(inv[0])) < 1)
+		iSuccess = 0;
+
+	if (iSuccess == 1)
+	{
+		filename = inv[1];
+		iSuccess = knowledge_write(&filename);
+	}
+
+	//response
+	char* buffer = (char*)malloc(sizeof(char) * n);
+	if (iSuccess == 1)
+		snprintf(buffer, n, "My knowlege has been saved to %s", filename);
+	else
+		strcpy(buffer, "Writing failed");
+	strcpy(response, buffer);
+	free(buffer);
+
 	return 0;
-	 
 }
  
  
