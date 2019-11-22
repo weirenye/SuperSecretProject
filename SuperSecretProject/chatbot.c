@@ -42,6 +42,7 @@
  
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "chat1002.h"
  
  
@@ -170,9 +171,28 @@ int chatbot_is_load(const char *intent) {
  *   0 (the chatbot always continues chatting after loading knowledge)
  */
 int chatbot_do_load(int inc, char *inv[], char *response, int n) {
-	
-	/* to be implemented */
-	 
+	//load
+	int iSuccess = 1;
+	int iLines;
+	char* filename;
+	if ((sizeof(inv) / sizeof(inv[0])) < 1)
+		iSuccess = 0;
+
+	if (iSuccess == 1)
+	{
+		filename = inv[1];
+		iLines = knowledge_read(&filename);
+	}
+
+	//response
+	char* buffer = (char*)malloc(sizeof(char) * n);
+	if (iSuccess == 1)
+		snprintf(buffer, n, "Read %d responses from %s", iLines, filename);
+	else
+		strcpy(buffer, "Reading failed");
+	strcpy(response, buffer);
+	free(buffer);
+
 	return 0;
 	 
 }
@@ -268,10 +288,7 @@ int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_save(const char *intent) {
 	
-	/* to be implemented */
-	
-	return 0;
-	
+	return compare_token(intent, "save") == 0;
 }
 
 
@@ -286,7 +303,7 @@ int chatbot_is_save(const char *intent) {
  */
 int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	
-	/* to be implemented */
+	//ian will do this
 	
 	return 0;
 	 
