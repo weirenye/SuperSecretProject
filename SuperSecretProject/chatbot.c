@@ -323,7 +323,15 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
  */
 int chatbot_is_smalltalk(const char *intent) {
 	
-	/* to be implemented */
+	char* smalltalk[] = { "Hello", "Hi", "Hey", "Wassup", "Yo", "Greetings" };
+	size_t stLength = sizeof(smalltalk) / sizeof(smalltalk[0]);
+	for (int i = 0; i < stLength; i++)
+	{
+		if (compare_token(intent, smalltalk[i]) == 0)
+		{
+			return 1;
+		}
+	}
 	
 	return 0;
  
@@ -342,7 +350,10 @@ int chatbot_is_smalltalk(const char *intent) {
  */
 int chatbot_do_smalltalk(int inc, char *inv[], char *response, int n) {
 	
-	/* to be implemented */
+	char* stOutput[] = { "Hi, Welcome to ICT1002 Chatbot", "What's up?", "Hello", "Hi", "Hey", "Wassup", "Yo", "Greetings" };
+	size_t stLength = sizeof(stOutput) / sizeof(stOutput[0]);
+	int randOutput = rand() % stLength;
+	snprintf(response, n, stOutput[randOutput]);
 	
 	return 0;
 	
