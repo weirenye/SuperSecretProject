@@ -80,7 +80,7 @@ const char *chatbot_username() {
  *   0, if the chatbot should continue chatting
  *   1, if the chatbot should stop (i.e. it detected the EXIT intent)
  */
-int chatbot_main(int inc, char *inv[], char *response, int n) {
+int chatbot_main(int inc, char *inv[], char *response, int n, Knowlege* knowlege) {
 	
 	/* check for empty input */
 	if (inc < 1) {

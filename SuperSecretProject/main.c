@@ -69,6 +69,7 @@ int main(int argc, char *argv[]) {
 		printf("%s: %s\n", chatbot_botname(), output);
 		
 	} while (!done);
+	knowledge_reset(); //to clear all memory used under head
 	
 	return 0;
 }
