@@ -32,13 +32,7 @@
  *   KB_INVALID, if 'intent' is not a recognised question word
  */
 
-struct sknow {
-	char intent[5];
-	char entity[50];
-	char value[50];
-	struct sknow* next;
-};
-typedef struct sknow Knowlege;
+
 
 int knowledge_get(const char *intent, const char *entity, char *response, int n) {
 	
@@ -105,8 +99,7 @@ void knowledge_reset() {
  *   f - the file
  */
 int knowledge_write(FILE *f) {
-	//ian will do
-	//return 1 = success
-	//return 0 = fail
+	fprintf(f, "\n%s,%s=%s", "what", "frank", "meow");
+	fprintf(f, "\n%s,%s=%s", "what", "frank", "meow2");
 	return 1;
 }

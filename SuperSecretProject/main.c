@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 	char output[MAX_RESPONSE];  /* the chatbot's output */
 	int len;                    /* length of a word */
 	int done = 0;               /* set to 1 to end the main loop */
-	Knowlege head = { NULL, NULL, NULL, NULL };
+	Know head = { NULL,NULL,NULL,NULL };
 	
 	/* initialise the chatbot */
 	inv[0] = "reset";

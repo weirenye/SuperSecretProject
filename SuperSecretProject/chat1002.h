@@ -55,7 +55,12 @@ int knowledge_put(const char *intent, const char *entity, const char *response);
 void knowledge_reset();
 int knowledge_read(FILE *f);
 int knowledge_write(FILE *f);
-struct sknow;
-typedef Knowlege;
+struct sknow {
+	char intent[5];
+	char entity[50];
+	char value[50];
+	struct sknow* next;
+};
+typedef struct sknow Know;
 
 #endif

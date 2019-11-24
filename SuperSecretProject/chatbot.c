@@ -80,7 +80,7 @@ const char *chatbot_username() {
  *   0, if the chatbot should continue chatting
  *   1, if the chatbot should stop (i.e. it detected the EXIT intent)
  */
-int chatbot_main(int inc, char *inv[], char *response, int n, Knowlege* knowlege) {
+int chatbot_main(int inc, char *inv[], char *response, int n, Know* knowlege) {
 	
 	/* check for empty input */
 	if (inc < 1) {
@@ -310,7 +310,9 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	if (iSuccess == 1)
 	{
 		filename = inv[1];
-		iSuccess = knowledge_write(&filename);
+		FILE* tFile = fopen(&filename, "w");
+		iSuccess = knowledge_write(tFile);
+		fclose(tFile);
 	}
 
 	//response
