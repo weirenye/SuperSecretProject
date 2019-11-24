@@ -94,13 +94,13 @@ int chatbot_main(int inc, char *inv[], char *response, int n, Know* knowlege) {
 	else if (chatbot_is_smalltalk(inv[0]))
 		return chatbot_do_smalltalk(inc, inv, response, n);
 	else if (chatbot_is_load(inv[0]))
-		return chatbot_do_load(inc, inv, response, n);
+		return chatbot_do_load(inc, inv, response, n, knowlege);
 	else if (chatbot_is_question(inv[0]))
 		return chatbot_do_question(inc, inv, response, n);
 	else if (chatbot_is_reset(inv[0]))
 		return chatbot_do_reset(inc, inv, response, n);
 	else if (chatbot_is_save(inv[0]))
-		return chatbot_do_save(inc, inv, response, n);
+		return chatbot_do_save(inc, inv, response, n, knowlege);
 	else {
 		snprintf(response, n, "I don't understand \"%s\".", inv[0]);
 		return 0;
@@ -170,7 +170,9 @@ int chatbot_is_load(const char *intent) {
  * Returns:
  *   0 (the chatbot always continues chatting after loading knowledge)
  */
-int chatbot_do_load(int inc, char *inv[], char *response, int n) {
+int chatbot_do_load(int inc, char *inv[], char *response, int n, Know* know) {
+	//clear existing knowlege
+	knowledge_reset();
 	//load
 	int iSuccess = 1;
 	int iLines;
@@ -181,7 +183,9 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	if (iSuccess == 1)
 	{
 		filename = inv[1];
-		iLines = knowledge_read(&filename);
+		FILE* tFile = fopen(filename, "r"); //create a file object
+		iLines = knowledge_read(tFile, know); //pass to function
+		fclose(tFile);
 	}
 
 	//response
@@ -189,7 +193,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n) {
 	if (iSuccess == 1)
 		snprintf(buffer, n, "Read %d responses from %s", iLines, filename);
 	else
-		strcpy(buffer, "Reading failed");
+		strcpy(buffer, "Reading failed or file empty");
 	strcpy(response, buffer);
 	free(buffer);
 
@@ -300,7 +304,7 @@ int chatbot_is_save(const char *intent) {
  * Returns:
  *   0 (the chatbot always continues chatting after saving knowledge)
  */
-int chatbot_do_save(int inc, char *inv[], char *response, int n) {
+int chatbot_do_save(int inc, char *inv[], char *response, int n, Know* know) {
 	//load
 	int iSuccess = 1;
 	char* filename = NULL;
@@ -310,8 +314,8 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n) {
 	if (iSuccess == 1)
 	{
 		filename = inv[1];
-		FILE* tFile = fopen(&filename, "w");
-		iSuccess = knowledge_write(tFile);
+		FILE* tFile = fopen(filename, "w"); //create file object
+		iSuccess = knowledge_write(tFile, know); //pass to function
 		fclose(tFile);
 	}
 

@@ -75,10 +75,59 @@ int knowledge_put(const char *intent, const char *entity, const char *response) 
  *
  * Returns: the number of entity/response pairs successful read from the file
  */
-int knowledge_read(FILE *f) {
-	//ian
-	
-	return 12;
+int knowledge_read(FILE *f, Know* know) {
+	int iCount = 0;
+	while (!feof(f))
+	{
+		char tLine[152]; //line to read each line of data
+
+		char iIntent[50];
+		char iEntity[50];
+		char iValue[50];
+		iIntent[0] = '\0';
+		iEntity[0] = '\0';
+		iValue[0] = '\0'; //turn them into null terminated empty strings
+
+		fscanf(f, "%151[^\n]\n", &tLine);
+		
+		int iType = 1; //1 = intent, 2 = entity, 3=value
+		int iSkip = 0;
+		for (int i = 0; i < strlen(tLine); i++)
+		{
+			iSkip = 0; //reset skip for every iteration
+			char iC = tLine[i];
+			if ((iC == ',') || (iC == '='))
+			{
+				iType++;
+				iSkip++;
+			}
+			
+			if (iSkip == 0) //if skip is not incremented
+			{
+				char tC[2];
+				tC[0] = iC;
+				tC[1] = '\0'; //turn char into a null terminated string so strcat can work
+
+				if (iType == 1)
+					strcat(iIntent, tC);
+				else if (iType == 2)
+					strcat(iEntity, tC);
+				else
+					strcat(iValue, tC);
+			}
+		}
+		Know* tKnow = know;
+		while (tKnow->next != NULL) //skip to the last node
+			tKnow = tKnow->next;
+		Know* tIKnow = (Know*)malloc(sizeof(Know));
+		strcpy(tIKnow->intent, iIntent);
+		strcpy(tIKnow->entity, iEntity);
+		strcpy(tIKnow->value, iValue);
+		tIKnow->next = NULL;
+		tKnow->next = tIKnow; //set new node to the next of the last node
+		iCount++;
+	}
+	return iCount;
 }
 
 
@@ -98,8 +147,14 @@ void knowledge_reset() {
  * Input:
  *   f - the file
  */
-int knowledge_write(FILE *f) {
-	fprintf(f, "\n%s,%s=%s", "what", "frank", "meow");
-	fprintf(f, "\n%s,%s=%s", "what", "frank", "meow2");
+int knowledge_write(FILE *f, Know* know) {
+	//the argument passed will be the header and it will be null except for its next
+	Know* tknow = know;
+	while (tknow->next != NULL)
+	{
+		tknow = tknow->next;
+		fprintf(f, "%s,%s=%s\n", tknow->intent, tknow->entity, tknow->value);
+		//format of each line will be <INTENT>,<ENTITY>=<VALUE>
+	}
 	return 1;
 }
