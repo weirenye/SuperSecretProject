@@ -16,6 +16,12 @@
 #include <stdio.h>
 #include <string.h>
 #include "chat1002.h"
+#include "linkedlist.h"
+#include "hashtable.h"
+#include "knowledgebase.h"
+
+ // Declare a global scope knowledge base
+KnowledgeBase* kb = NULL;
 
 /*
  * Get the response to a question.
@@ -59,11 +65,53 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  *   KB_INVALID, if the intent is not a valid question word
  */
 int knowledge_put(const char *intent, const char *entity, const char *response) {
-	
-	/* to be implemented */
-	
-	return KB_INVALID;
-	
+	//If intent matches the word "what"
+	if(compare_token(intent, "what")==0){
+		Node * newNode = createNode(entity, response);
+		//No more memory for allocating a new node
+		if(newNode ==NULL){
+			return KB_NOMEM;
+		}
+		else
+		{
+			//Add a new node that contain entity and response into what knowledge base. 
+			kb = insertKnowledgeBase(kb , "what", createNode(entity,response));
+			return KB_OK;
+		}
+		
+	}
+	//Else if intent matches the word "where"
+	else if (compare_token(intent, "where") ==0){
+		Node * newNode = createNode(entity, response);
+		//No more memory for allocating a new node
+		if(newNode ==NULL){
+			return KB_NOMEM;
+		}
+		else
+		{
+			//Add a new node that contain entity and response into where knowledge base. 
+			kb = insertKnowledgeBase(kb , "where", createNode(entity,response));
+			return KB_OK;
+		}
+	}
+	//Else if intent matches the word "who"
+	else if (compare_token(intent, "who")== 0){
+		Node * newNode = createNode(entity, response);
+		//No more memory for allocating a new node
+		if(newNode ==NULL){
+			return KB_NOMEM;
+		}
+		else
+		{
+			//Add a new node that contain entity and response into who knowledge base. 
+			kb = insertKnowledgeBase(kb , "who", createNode(entity,response));
+			return KB_OK;
+		}
+	}
+	else{
+		//Else if intent was not "what" or "who" or "where", return KB_INVALID.
+		return KB_INVALID;
+	}
 }
 
 
