@@ -92,11 +92,11 @@ int knowledge_read(FILE *f, Know* know) {
 	int iCount = 0;
 	while (!feof(f))
 	{
-		char tLine[152]; //line to read each line of data
+		char tLine[MAX_INTENT + MAX_ENTITY + MAX_RESPONSE + 2]; //line to read each line of data
 
-		char iIntent[50];
-		char iEntity[50];
-		char iValue[50];
+		char iIntent[MAX_INTENT];
+		char iEntity[MAX_ENTITY];
+		char iValue[MAX_RESPONSE];
 		iIntent[0] = '\0';
 		iEntity[0] = '\0';
 		iValue[0] = '\0'; //turn them into null terminated empty strings
