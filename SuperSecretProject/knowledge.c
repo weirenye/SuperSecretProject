@@ -11,14 +11,14 @@
  *
  * You may add helper functions as necessary.
  */
- 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "chat1002.h"
 #include "knowledge.h"
 
-knowledge_item_t* database = NULL;
+tKnowledgeItem* database = NULL;
 
 /*
  * Get the response to a question.
@@ -37,12 +37,12 @@ knowledge_item_t* database = NULL;
 
 
 
-int knowledge_get(const char *intent, const char *entity, char *response, int n) {
-	
+int knowledge_get(const char* intent, const char* entity, char* response, int n) {
+
 	/* to be implemented */
-	
+
 	return KB_NOTFOUND;
-	
+
 }
 
 
@@ -63,7 +63,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  */
 int knowledge_put(const char* intent, const char* entity, const char* response)
 {
-	intent_t i = intent_code(intent, MAX_INTENT);
+	tIntent i = intent_code(intent, MAX_INTENT);
 	printf("%s = %d\n", intent, i);
 	if (i == INTENT_UNKNOWN) {
 		printf("INTENT_UNKNOWN\n");
@@ -88,21 +88,21 @@ int knowledge_put(const char* intent, const char* entity, const char* response)
  *
  * Returns: the number of entity/response pairs successful read from the file
  */
-int knowledge_read(FILE *f, Know* know) {
+int knowledge_read(FILE* f, Know* know) {
 	int iCount = 0;
 	while (!feof(f))
 	{
-		char tLine[MAX_INTENT + MAX_ENTITY + MAX_RESPONSE + 2]; //line to read each line of data
+		char tLine[152]; //line to read each line of data
 
-		char iIntent[MAX_INTENT];
-		char iEntity[MAX_ENTITY];
-		char iValue[MAX_RESPONSE];
+		char iIntent[50];
+		char iEntity[50];
+		char iValue[50];
 		iIntent[0] = '\0';
 		iEntity[0] = '\0';
 		iValue[0] = '\0'; //turn them into null terminated empty strings
 
 		fscanf(f, "%151[^\n]\n", &tLine);
-		
+
 		int iType = 1; //1 = intent, 2 = entity, 3=value
 		int iSkip = 0;
 		for (int i = 0; i < strlen(tLine); i++)
@@ -114,7 +114,7 @@ int knowledge_read(FILE *f, Know* know) {
 				iType++;
 				iSkip++;
 			}
-			
+
 			if (iSkip == 0) //if skip is not incremented
 			{
 				char tC[2];
@@ -150,7 +150,7 @@ int knowledge_read(FILE *f, Know* know) {
 void knowledge_reset() {
 	//mabel
 	/* to be implemented */
-	
+
 }
 
 
@@ -160,7 +160,7 @@ void knowledge_reset() {
  * Input:
  *   f - the file
  */
-int knowledge_write(FILE *f, Know* know) {
+int knowledge_write(FILE* f, Know* know) {
 	//the argument passed will be the header and it will be null except for its next
 	Know* tknow = know;
 	while (tknow->next != NULL)

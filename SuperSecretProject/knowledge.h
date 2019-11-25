@@ -33,9 +33,9 @@ enum intent {
 	INTENT_UNKNOWN
 };
 
-typedef enum intent intent_t;
+typedef enum intent tIntent;
 
-static char* intent_string(const intent_t intent) {
+static char* intent_string(const tIntent intent) {
 	switch (intent) {
 	case WHERE:
 		return WHERE_TEXT;
@@ -56,8 +56,8 @@ static char* intent_string(const intent_t intent) {
 	}
 }
 
-static intent_t intent_code(const char* string, const size_t string_len) {
-	intent_t i;
+static tIntent intent_code(const char* string, const size_t string_len) {
+	tIntent i;
 	for (i = 0; i < INTENT_COUNT; i++) {
 		char* compare_string = intent_string(i);
 		if (compare_string == NULL) {
@@ -77,7 +77,7 @@ struct knowledge_item {
 	struct knowledge_item* next;
 };
 
-typedef struct knowledge_item knowledge_item_t;
+typedef struct knowledge_item tKnowledgeItem;
 
 static char* database_string_create(const char* source, const size_t max_source) {
 	size_t source_len = strnlen(source, max_source);
@@ -94,21 +94,21 @@ static void database_string_destroy(char* string) {
 	free(string);
 }
 
-static knowledge_item_t* database_create() {
-	knowledge_item_t* head = (knowledge_item_t*)malloc(sizeof(knowledge_item_t));
+static tKnowledgeItem* database_create() {
+	tKnowledgeItem* head = (tKnowledgeItem*)malloc(sizeof(tKnowledgeItem));
 	if (head == NULL) { // This line is not necessary but it makes it clear it can return NULL
 		return NULL;
 	}
 	return head;
 }
 
-static void database_insert(knowledge_item_t* new, knowledge_item_t* prev) {
+static void database_insert(tKnowledgeItem* new, tKnowledgeItem* prev) {
 	new->next = prev->next;
 	prev->next = new;
 }
 
-static void database_destroy(knowledge_item_t* head) {
-	knowledge_item_t* temp = head;
+static void database_destroy(tKnowledgeItem* head) {
+	tKnowledgeItem* temp = head;
 	while (head != NULL) {
 		temp = head;
 		head = head->next;
@@ -118,8 +118,8 @@ static void database_destroy(knowledge_item_t* head) {
 	}
 }
 
-static int database_add(knowledge_item_t* head, const intent_t intent, const char* key, const size_t max_key, const char* value, const size_t max_value) {
-	knowledge_item_t* new = database_create();
+static int database_add(tKnowledgeItem* head, const tIntent intent, const char* key, const size_t max_key, const char* value, const size_t max_value) {
+	tKnowledgeItem* new = database_create();
 	if (new == NULL) {
 		return KB_NOMEM;
 	}
