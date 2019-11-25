@@ -32,9 +32,9 @@
 int compare_token(const char *token1, const char *token2);
 void prompt_user(char *buf, int n, const char *format, ...);
 struct sknow {
-	char intent[MAX_INTENT];
-	char entity[MAX_ENTITY];
-	char value[MAX_RESPONSE];
+	char intent[50];
+	char entity[50];
+	char value[50];
 	struct sknow* next;
 };
 typedef struct sknow Know;
