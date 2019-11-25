@@ -16,12 +16,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "chat1002.h"
-#include "linkedlist.h"
-#include "hashtable.h"
-#include "knowledgebase.h"
+#include "knowledge.h"
 
- // Declare a global scope knowledge base
-KnowledgeBase* kb = NULL;
+knowledge_item_t* database = NULL;
 
 /*
  * Get the response to a question.
@@ -64,54 +61,22 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n)
  *   KB_NOMEM, if there was a memory allocation failure
  *   KB_INVALID, if the intent is not a valid question word
  */
-int knowledge_put(const char *intent, const char *entity, const char *response) {
-	//If intent matches the word "what"
-	if(compare_token(intent, "what")==0){
-		Node * newNode = createNode(entity, response);
-		//No more memory for allocating a new node
-		if(newNode ==NULL){
-			return KB_NOMEM;
-		}
-		else
-		{
-			//Add a new node that contain entity and response into what knowledge base. 
-			kb = insertKnowledgeBase(kb , "what", createNode(entity,response));
-			return KB_OK;
-		}
-		
-	}
-	//Else if intent matches the word "where"
-	else if (compare_token(intent, "where") ==0){
-		Node * newNode = createNode(entity, response);
-		//No more memory for allocating a new node
-		if(newNode ==NULL){
-			return KB_NOMEM;
-		}
-		else
-		{
-			//Add a new node that contain entity and response into where knowledge base. 
-			kb = insertKnowledgeBase(kb , "where", createNode(entity,response));
-			return KB_OK;
-		}
-	}
-	//Else if intent matches the word "who"
-	else if (compare_token(intent, "who")== 0){
-		Node * newNode = createNode(entity, response);
-		//No more memory for allocating a new node
-		if(newNode ==NULL){
-			return KB_NOMEM;
-		}
-		else
-		{
-			//Add a new node that contain entity and response into who knowledge base. 
-			kb = insertKnowledgeBase(kb , "who", createNode(entity,response));
-			return KB_OK;
-		}
-	}
-	else{
-		//Else if intent was not "what" or "who" or "where", return KB_INVALID.
+int knowledge_put(const char* intent, const char* entity, const char* response)
+{
+	intent_t i = intent_code(intent, MAX_INTENT);
+	printf("%s = %d\n", intent, i);
+	if (i == INTENT_UNKNOWN) {
+		printf("INTENT_UNKNOWN\n");
 		return KB_INVALID;
 	}
+
+	int err = database_add(database, i, entity, strnlen(entity, MAX_ENTITY), response, strnlen(response, MAX_RESPONSE));
+	if (err) {
+		printf("add err: %d\n", err);
+		return err;
+	}
+
+	return KB_FOUND;
 }
 
 
