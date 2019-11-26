@@ -38,6 +38,11 @@ struct sknow {
 	struct sknow* next;
 };
 typedef struct sknow Know;
+/* Define the three pointers that will point to the head of each of the 3 linked-lists */
+Know *headofWHO, *headofWHAT, *headofWHERE;
+
+/* Define the three pointers that will be used to traverse the 3 respective linked-lists */
+Know *whoIterator, *whatIterator, *whereIterator;
 /* functions defined in chatbot.c */
 const char *chatbot_botname();
 const char *chatbot_username();

@@ -37,12 +37,78 @@ tKnowledgeItem* database = NULL;
 
 
 
-int knowledge_get(const char* intent, const char* entity, char* response, int n) {
+int knowledge_get(const char *intent, const char *entity, char *response, int n) {
+	
+	/* ==================================================================================================================================== */
+/* ----------------------------------------------------- If intent=="WHO" ----------------------------------------------------- */
+	if (compare_token(intent, "who") == 0) {
+		if (headofWHO != NULL) {                                       /* If a linked-list already exists */
+			whoIterator = headofWHO;                                /* Point the whoIterator to head of 'WHO' linked-list */
+			do {                                                     /* While no match is found, Make the iterator point to the next node (if last node, it will point to NULL) */
+				if (compare_token(whoIterator->entity, entity) == 0) {         /* If a node with the same entity exists */
+					strncpy(response, whoIterator->value, n);        /* Copy it to the response buffer */
+					return KB_FOUND;                                   /* After copying to response buffer, return KB_OK (0) */
+				}
 
-	/* to be implemented */
+				whoIterator = whoIterator->next;                      /* If program did not enter the if statement (no entity match), point the iterator to the next node */
+			} while (whoIterator);
 
-	return KB_NOTFOUND;
+			/* If code reaches this point, it means that after iterating through all nodes in Linked-list, no match was found */
+			/* Hence, return a KB_NOTFOUND code (-1), this makes chatbot_do_question invoke knowledge_put() */
+			return KB_NOTFOUND;
+		}
+		else {                                                       /* Else if linked-list does not exist, return KB_NOTFOUND (-1), this makes chatbot_do_question invoke knowledge_put() */
+			return KB_NOTFOUND;
+		}
+	}
+	/* ----------------------------------------------------- ELSE If intent=="WHAT" -----------------------------------------------------*/
+	else if (compare_token(intent, "what") == 0) {
+		if (headofWHAT != NULL) {                                      /* If a linked-list already exists */
+			whatIterator = headofWHAT;                              /* Point the whatIterator to head of 'WHAT' linked-list */
+			do {                                                     /* While no match is found, Make the iterator point to the next node (if last node, it will point to NULL) */
+				if (compare_token(whatIterator->entity, entity) == 0) {        /* If a node with the same entity exists */
+					strncpy(response, whatIterator->value, n);       /* Copy it to the response buffer */
+					return KB_FOUND;                                   /* After copying to response buffer, return KB_OK (0) */
+				}
 
+				whatIterator = whatIterator->next;                    /* If program did not enter the if statement (entity did not match), point the iterator to the next node */
+			} while (whatIterator);
+
+			/* If code reaches this point, it means that after iterating through all nodes in Linked-list, no match was found */
+			/* Hence, return a KB_NOTFOUND code (-1), this makes chatbot_do_question invoke knowledge_put() */
+			return KB_NOTFOUND;
+		}
+		else {                                                       /* Else if linked-list does not exist, return KB_NOTFOUND (-1), this makes chatbot_do_question invoke knowledge_put() */
+			return KB_NOTFOUND;
+		}
+	}
+	/* ----------------------------------------------------- ELSE If intent=="WHERE" ----------------------------------------------------- */
+	else if (compare_token(intent, "where") == 0) {
+		if (headofWHERE != NULL) {                                     /* If a linked-list already exists */
+			whereIterator = headofWHERE;                            /* Point the whereIterator to head of 'WHERE' linked-list */
+			do {                                                     /* While no match is found, Make the iterator point to the next node (if last node, it will point to NULL) */
+				if (compare_token(whereIterator->entity, entity) == 0) {       /* If a node with the same entity exists */
+					strncpy(response, whereIterator->value, n);      /* Copy it to the response buffer */
+					return KB_FOUND;                                   /* After copying to response buffer, return KB_OK (0) */
+				}
+
+				whereIterator = whereIterator->next;                  /* If program did not enter the if statement (entity did not match), point the iterator to the next node */
+			} while (whereIterator);
+
+			/* If code reaches this point, it means that after iterating through all nodes in Linked-list, no match was found */
+			/* Hence, return a KB_NOTFOUND code (-1), this makes chatbot_do_question invoke knowledge_put() */
+			return KB_NOTFOUND;
+		}
+		else {                                                       /* Else if linked-list does not exist, return KB_NOTFOUND (-1), this makes chatbot_do_question invoke knowledge_put() */
+			return KB_NOTFOUND;
+		}
+	}
+	/* -------------------------------- Else if not recognised intent, return KB_INVALID (no such intent) -------------------------------- */
+	else {
+		return KB_INVALID;
+	}
+	/* ==================================================================================================================================== */
+	
 }
 
 
