@@ -96,7 +96,7 @@ int chatbot_main(int inc, char *inv[], char *response, int n, Know* knowlege) {
 	else if (chatbot_is_load(inv[0]))
 		return chatbot_do_load(inc, inv, response, n, knowlege);
 	else if (chatbot_is_question(inv[0]))
-		return chatbot_do_question(inc, inv, response, n);
+		return chatbot_do_question(inc, inv, response, n, knowlege);
 	else if (chatbot_is_reset(inv[0]))
 		return chatbot_do_reset(inc, inv, response, n);
 	else if (chatbot_is_save(inv[0]))
@@ -213,20 +213,8 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n, Know* know) {
  */
 int chatbot_is_question(const char* intent) {
 
-	char* isintent;
-	isintent = intent;
-
-	for (int i = 0; i < strlen(intent); i++) {
-		isintent[i] = tolower(isintent[i]);
-	}
-
-
-	/* to be implemented */
-	if (!compare_token(isintent, "what") || !compare_token(isintent, "where") || !compare_token(isintent, "who")) {
+	if (compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0) {
 		return 1;
-	}
-	else {
-		return 0;
 	}
 
 	return 0;
@@ -247,7 +235,7 @@ int chatbot_is_question(const char* intent) {
  * Returns:
  *   0 (the chatbot always continues chatting after a question)
  */
-int chatbot_do_question(int inc, char* inv[], char* response, int n) {
+int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know) {
 
 	char userintent[MAX_INTENT];				/* Define a char array to store input intent of size MAX_INTENT */
 	strncpy(userintent, inv[0], sizeof(userintent) / sizeof(userintent[0]));
@@ -297,7 +285,8 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n) {
 
 
 	/* Calls knowledge_get and perform checks for various return values */
-	get_reply_code = knowledge_get(userintent, userentity, chatbot_entity, n);	/* Arguments: Intent, Entity, Buffer to store response from knowledge */
+	get_reply_code = knowledge_get(userintent, userentity, chatbot_entity, n, know);	/* Arguments: Intent, Entity, Buffer to store response from knowledge */
+	printf("%s\n", chatbot_entity);
 	if (get_reply_code == KB_FOUND) {												/* If a response was found for the intent and entity, */
 		snprintf(response, n, "%s", chatbot_entity);							/* 	the response is copied to the response buffer. */
 
@@ -316,8 +305,8 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n) {
 		else {
 
 			/* Calls knowledge_put to insert user response into knowledge base */
-			put_reply_code = knowledge_put(userintent, userentity, userresponse_notfound);		/* Arguments: Intent, Entity, Buffer to store user input */
-
+			put_reply_code = knowledge_put(userintent, userentity, userresponse_notfound, n, know);		/* Arguments: Intent, Entity, Buffer to store user input */
+			printf("%s\n", chatbot_entity);
 			if (put_reply_code == KB_FOUND) {				/* If knowledge_put is successful */
 				snprintf(response, n, "Thank you.");
 			}

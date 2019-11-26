@@ -38,11 +38,6 @@ struct sknow {
 	struct sknow* next;
 };
 typedef struct sknow Know;
-/* Define the three pointers that will point to the head of each of the 3 linked-lists */
-Know *headofWHO, *headofWHAT, *headofWHERE;
-
-/* Define the three pointers that will be used to traverse the 3 respective linked-lists */
-Know *whoIterator, *whatIterator, *whereIterator;
 /* functions defined in chatbot.c */
 const char *chatbot_botname();
 const char *chatbot_username();
@@ -61,8 +56,8 @@ int chatbot_is_smalltalk(const char *intent);
 int chatbot_do_smalltalk(int inc, char *inv[], char *resonse, int n);
 
 /* functions defined in knowledge.c */
-int knowledge_get(const char *intent, const char *entity, char *response, int n);
-int knowledge_put(const char *intent, const char *entity, const char *response);
+int knowledge_get(const char *intent, const char *entity, char *response, int n, Know* know);
+int knowledge_put(const char *intent, const char *entity, const char *response, int n, Know* know);
 void knowledge_reset();
 int knowledge_read(FILE *f, Know* know);
 int knowledge_write(FILE* f, Know* know);
