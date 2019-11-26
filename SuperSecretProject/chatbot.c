@@ -321,9 +321,8 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
  */
 int chatbot_is_reset(const char *intent) {
 	
-	/* to be implemented */
 	
-	return 0;
+	return compare_token(intent, "reset") == 0;
 	
 }
 
@@ -339,8 +338,8 @@ int chatbot_is_reset(const char *intent) {
  */
 int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
 	
-	/* to be implemented */
-	 
+	knowledge_reset();
+	snprintf(response, n, "%s has now forgotten all its memories shared with you.", chatbot_username());
 	return 0;
 	 
 }
