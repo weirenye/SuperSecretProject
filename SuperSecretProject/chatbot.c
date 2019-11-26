@@ -253,25 +253,6 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
 	int put_reply_code;							/* Define an int to store flag of knowledge_put */
 
 
-	/* Validation: Checks if Intent is accompanied by entity */
-	if (inc == 1) {
-		if (compare_token(userintent, "what") == 0) {
-			snprintf(response, n, "Sorry, I did not understand the phrase. Did you mean something like, \"What is ICT?\"");
-		}
-		else if (compare_token(userintent, "who") == 0) {
-			snprintf(response, n, "Sorry, I did not understand the phrase. Did you mean something like, \"Who is the cluster director of ICT?\"");
-		}
-		else if (compare_token(userintent, "where") == 0) {
-			snprintf(response, n, "Sorry, I did not understand the phrase. Did you mean something like, \"Where is SIT?\"");
-		}
-		return 0;
-	}
-	else if ((inc == 2 && compare_token(inv[1], "is") == 0) || (inc == 2 && compare_token(inv[1], "are") == 0)) {
-		snprintf(response, n, "Sorry, I did not understand the phrase. Please describe your noun.");
-		return 0;
-	}
-
-
 	/* Simple Validation */
 	for (int i = 1; i < inc; i++) {
 		/* Checks for the nouns "is" or "are" */
@@ -286,7 +267,6 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
 
 	/* Calls knowledge_get and perform checks for various return values */
 	get_reply_code = knowledge_get(userintent, userentity, chatbot_entity, n, know);	/* Arguments: Intent, Entity, Buffer to store response from knowledge */
-	printf("%s\n", chatbot_entity);
 	if (get_reply_code == KB_FOUND) {												/* If a response was found for the intent and entity, */
 		snprintf(response, n, "%s", chatbot_entity);							/* 	the response is copied to the response buffer. */
 
