@@ -50,7 +50,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n,
 				}
 
 				know = know->next;                      /* If program did not enter the if statement (no entity match), point the iterator to the next node */
-			} while (know);
+			} while (know);//
 
 			/* If code reaches this point, it means that after iterating through all nodes in Linked-list, no match was found */
 			/* Hence, return a KB_NOTFOUND code (-1), this makes chatbot_do_question invoke knowledge_put() */

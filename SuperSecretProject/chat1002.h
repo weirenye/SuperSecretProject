@@ -37,7 +37,7 @@ struct sknow {
 	char value[MAX_RESPONSE];
 	struct sknow* next;
 };
-typedef struct sknow Know;
+typedef struct sknow Know;//
 /* functions defined in chatbot.c */
 const char *chatbot_botname();
 const char *chatbot_username();
