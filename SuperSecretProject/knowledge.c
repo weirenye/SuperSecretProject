@@ -81,8 +81,13 @@ int knowledge_get(const char* intent, const char* entity, char* response, int n,
 							}
 						}
 					}
+					if (iCurrMatch == iHighestpossible && nodeEntityLen > questionLen) //if complete match
+					{
+						strncpy(response, now->value, n);
+						return KB_PARTIAL;
+					}
 
-					if (iCurrMatch >= iHighestpossible) //if complete match
+					else if (iCurrMatch == iHighestpossible) //if complete match
 					{
 						strncpy(response, now->value, n);
 						return KB_FOUND;
