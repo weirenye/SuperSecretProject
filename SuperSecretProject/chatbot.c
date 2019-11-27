@@ -276,6 +276,10 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
 			strncpy(usernoun, inv[i], sizeof(inv[i]) / sizeof(inv[i][0]));						/* Store into usernoun */
 			continue;
 		}
+		else if (compare_token(inv[i], "the") == 0 || compare_token(inv[i], "of") == 0) {
+			strncpy(usernoun, inv[i], sizeof(inv[i]) / sizeof(inv[i][0]));						/* Store into usernoun */
+			continue;
+		}
 		strcat(strcat(userentity, " "), inv[i]);		/* Store into userentity */
 	}
 	memmove(userentity, userentity + 1, strlen(userentity));	/* Formats entity portion */
@@ -286,6 +290,21 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
 	if (get_reply_code == KB_FOUND) {												/* If a response was found for the intent and entity, */
 		snprintf(response, n, "%s", chatbot_entity);							/* 	the response is copied to the response buffer. */
 
+	}
+	else if (get_reply_code == KB_PARTIAL) {
+		prompt_user(userresponse_notfound, MAX_INPUT, "I'm sure if you mean %s? if so, please type yes, if not, no", chatbot_entity);/* If a response was found for the intent and entity, */
+		if (compare_token(userresponse_notfound, "") == 0) {
+			strcpy(response, "-(");
+		}
+		else if (compare_token(userresponse_notfound, "yes") == 0) {
+			put_reply_code = knowledge_put(userintent, userentity, chatbot_entity, n, know);
+			if (put_reply_code == KB_FOUND) {				/* If knowledge_put is successful */
+				snprintf(response, n, "Thank yous.");
+			}
+		}
+		else if (compare_token(userresponse_notfound, "no") == 0) {
+			//put_reply_code = knowledge_put(userintent, userentity, userresponse_notfound, n, know);
+		}
 	}
 	else if (get_reply_code == KB_NOTFOUND) {																			/* If no response could be found, */
 		if (compare_token(usernoun, "\0") == 0) {

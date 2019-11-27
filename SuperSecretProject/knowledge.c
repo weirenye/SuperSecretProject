@@ -52,8 +52,8 @@ void wordsplit(char* sen, char arr[][MAX_ENTITY], int* len) {
 	}
 }
 
-int knowledge_get(const char *intent, const char *entity, char *response, int n, Know *know) {
-	
+int knowledge_get(const char* intent, const char* entity, char* response, int n, Know* know) {
+
 	Know* now = know;
 	/* ==================================================================================================================================== */
 /* ----------------------------------------------------- If intent=="WHO" ----------------------------------------------------- */
@@ -63,9 +63,9 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n,
 		wordsplit(entity, &questionArray, &questionLen);
 		int iHighestMatch = 0;
 		char currResponse[MAX_RESPONSE];
-		if (now != NULL) {                                    
-			while (now) {                                                    
-				if (compare_token(now->intent, intent) == 0) {         
+		if (now != NULL) {
+			while (now) {
+				if (compare_token(now->intent, intent) == 0) {
 					int iCurrMatch = 0;
 					int iHighestpossible = 0;
 					for (int i = 0; i < questionLen; i++)
@@ -80,13 +80,13 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n,
 								iCurrMatch++;
 						}
 					}
-				
+
 					if (iCurrMatch > iHighestMatch)
 					{
 						iHighestMatch = iCurrMatch;
 						strncpy(response, now->value, n);        /* Copy it to the response buffer */
 					}
-					if (iCurrMatch >= iHighestpossible) //if complete match
+					if (iCurrMatch == iHighestpossible) //if complete match
 					{
 						strncpy(response, now->value, n);
 						return KB_FOUND;
@@ -96,7 +96,7 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n,
 			}
 			if (iHighestMatch != 0) //if partial match
 			{
-				return KB_FOUND;
+				return KB_PARTIAL;
 			}
 
 			/* If code reaches this point, it means that after iterating through all nodes in Linked-list, no match was found */
@@ -112,8 +112,9 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n,
 		return KB_INVALID;
 	}
 	/* ==================================================================================================================================== */
-	
+
 }
+
 
 
 /*
