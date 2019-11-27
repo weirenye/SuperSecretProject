@@ -179,6 +179,14 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n, Know* know) {
 	char* filename = NULL;
 	if ((sizeof(inv) / sizeof(inv[0])) < 1)
 		iSuccess = 0;
+	//empty filename error checking
+	if (inv[1] == NULL) {
+		iSuccess = 3;
+	}
+	//if file does not exist
+	else if ((fopen(inv[1], "r")) == NULL) {
+		iSuccess = 4;
+	}
 
 	if (iSuccess == 1)
 	{
@@ -192,6 +200,12 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n, Know* know) {
 	char* buffer = (char*)malloc(sizeof(char) * n);
 	if (iSuccess == 1)
 		snprintf(buffer, n, "Read %d responses from %s", iLines, filename);
+	else if (iSuccess == 3) {
+		strcpy(buffer, "Please enter file name to load");
+	}
+	else if (iSuccess == 4) {
+		strcpy(buffer, "File not found");
+	}
 	else
 		strcpy(buffer, "Reading failed or file empty");
 	strcpy(response, buffer);
@@ -375,6 +389,9 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n, Know* know) {
 	char* filename = NULL;
 	if ((sizeof(inv) / sizeof(inv[0])) < 1)
 		iSuccess = 0;
+	if (inv[1] == NULL) {
+		iSuccess = 3;
+	}
 
 	if (iSuccess == 1)
 	{
@@ -388,6 +405,9 @@ int chatbot_do_save(int inc, char *inv[], char *response, int n, Know* know) {
 	char* buffer = (char*)malloc(sizeof(char) * n);
 	if (iSuccess == 1)
 		snprintf(buffer, n, "My knowlege has been saved to %s", filename);
+	else if (iSuccess == 3) {
+		strcpy(buffer, "Please Enter a file name to save ");
+	}
 	else
 		strcpy(buffer, "Writing failed");
 	strcpy(response, buffer);
