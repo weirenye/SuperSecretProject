@@ -81,6 +81,8 @@ const char *chatbot_username() {
  *   1, if the chatbot should stop (i.e. it detected the EXIT intent)
  */
 int chatbot_main(int inc, char *inv[], char *response, int n, Know* knowlege) {
+
+	headp = knowlege;
 	
 	/* check for empty input */
 	if (inc < 1) {
@@ -352,7 +354,7 @@ int chatbot_is_reset(const char *intent) {
 int chatbot_do_reset(int inc, char *inv[], char *response, int n) {
 	
 	knowledge_reset();
-	snprintf(response, n, "%s has now forgotten all its memories shared with you.", chatbot_username());
+	snprintf(response, n, "%s has now forgotten all its memories shared with you.", chatbot_botname());
 	return 0;
 	 
 }

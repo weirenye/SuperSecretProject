@@ -252,7 +252,22 @@ int knowledge_read(FILE* f, Know* know) {
  */
 void knowledge_reset() {
 	//mabel
-	/* to be implemented */
+
+	Know* temp = headp;
+	Know* nextitem;
+
+	if (headp != NULL) {
+
+		nextitem = temp->next;
+		temp->next = NULL;
+		temp = nextitem;
+		while (temp) {
+			Know* temp1 = temp;
+			temp = temp->next;
+			free(temp1);
+		}
+		headp = NULL;
+	}
 
 }
 

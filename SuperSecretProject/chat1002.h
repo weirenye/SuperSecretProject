@@ -38,6 +38,8 @@ struct sknow {
 	struct sknow* next;
 };
 typedef struct sknow Know;//
+Know* headp;
+
 /* functions defined in chatbot.c */
 const char *chatbot_botname();
 const char *chatbot_username();
