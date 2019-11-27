@@ -213,7 +213,7 @@ int chatbot_do_load(int inc, char *inv[], char *response, int n, Know* know) {
  */
 int chatbot_is_question(const char* intent) {
 
-	if (compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0) {
+	if (compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0 || compare_token(intent, "how") == 0 || compare_token(intent, "why") == 0 || compare_token(intent, "when") == 0) {
 		return 1;
 	}
 
@@ -286,7 +286,6 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
 
 			/* Calls knowledge_put to insert user response into knowledge base */
 			put_reply_code = knowledge_put(userintent, userentity, userresponse_notfound, n, know);		/* Arguments: Intent, Entity, Buffer to store user input */
-			printf("%s\n", chatbot_entity);//
 			if (put_reply_code == KB_FOUND) {				/* If knowledge_put is successful */
 				snprintf(response, n, "Thank you.");
 			}
