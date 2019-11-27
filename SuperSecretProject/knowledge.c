@@ -32,7 +32,25 @@
  *   KB_INVALID, if 'intent' is not a recognised question word
  */
 
-
+void wordsplit(char* sen, char arr[][MAX_ENTITY], int* len) {
+	int j = 0;
+	int ctr = 0;
+	for (int i = 0; i <= (strlen(sen)); i++)
+	{
+		if (sen[i] == ' ' || sen[i] == '\0')
+		{
+			arr[ctr][j] = '\0';
+			ctr++;  //for next word
+			j = 0;    //for next word, init index to 0
+			(*len)++;
+		}
+		else
+		{
+			arr[ctr][j] = sen[i];
+			j++;
+		}
+	}
+}
 
 int knowledge_get(const char *intent, const char *entity, char *response, int n, Know *know) {
 	
@@ -40,15 +58,46 @@ int knowledge_get(const char *intent, const char *entity, char *response, int n,
 	/* ==================================================================================================================================== */
 /* ----------------------------------------------------- If intent=="WHO" ----------------------------------------------------- */
 	if (compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0 || compare_token(intent, "how") == 0 || compare_token(intent, "why") == 0 || compare_token(intent, "when") == 0) {
-		if (now != NULL) {                                    /* Point the whoIterator to head of 'WHO' linked-list */
-			do {                                                     /* While no match is found, Make the iterator point to the next node (if last node, it will point to NULL) */
-				if (compare_token(now->intent, intent) == 0 && compare_token(now->entity, entity) == 0) {         /* If a node with the same entity exists */
-					strncpy(response, now->value, n);        /* Copy it to the response buffer */
-					return KB_FOUND;                                   /* After copying to response buffer, return KB_OK (0) */
+		char questionArray[MAX_ENTITY][MAX_ENTITY];
+		int questionLen = 0;
+		wordsplit(entity, &questionArray, &questionLen);
+		int iHighestMatch = 0;
+		char currResponse[MAX_RESPONSE];
+		if (now != NULL) {                                    
+			while (now) {                                                    
+				if (compare_token(now->intent, intent) == 0) {         
+					int iCurrMatch = 0;
+					int iHighestpossible = 0;
+					for (int i = 0; i < questionLen; i++)
+					{
+						char nodeEntityArray[MAX_ENTITY][MAX_ENTITY];
+						int nodeEntityLen = 0;
+						wordsplit(now->entity, &nodeEntityArray, &nodeEntityLen);
+						iHighestpossible = nodeEntityLen * questionLen;
+						for (int x = 0; x < nodeEntityLen; x++)
+						{
+							if (compare_token(questionArray[i], nodeEntityArray[x]) == 0)
+								iCurrMatch++;
+						}
+					}
+				
+					if (iCurrMatch > iHighestMatch)
+					{
+						iHighestMatch = iCurrMatch;
+						strncpy(response, now->value, n);        /* Copy it to the response buffer */
+					}
+					if (iCurrMatch >= iHighestpossible) //if complete match
+					{
+						strncpy(response, now->value, n);
+						return KB_FOUND;
+					}
 				}
-
 				now = now->next;                      /* If program did not enter the if statement (no entity match), point the iterator to the next node */
-			} while (now);//
+			}
+			if (iHighestMatch != 0) //if partial match
+			{
+				return KB_FOUND;
+			}
 
 			/* If code reaches this point, it means that after iterating through all nodes in Linked-list, no match was found */
 			/* Hence, return a KB_NOTFOUND code (-1), this makes chatbot_do_question invoke knowledge_put() */
