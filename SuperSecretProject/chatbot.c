@@ -303,7 +303,30 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
 			}
 		}
 		else if (compare_token(userresponse_notfound, "no") == 0) {
-			//put_reply_code = knowledge_put(userintent, userentity, userresponse_notfound, n, know);
+			if (compare_token(usernoun, "\0") == 0) {
+				prompt_user(userresponse_notfound, MAX_INPUT, "I don't know. %s %s?", userintent, userentity);				/*	asks for user input IF usernoun is not declared, then call knowledge_put. */
+			}
+			else {
+				prompt_user(userresponse_notfound, MAX_INPUT, "I don't know. %s %s %s?", userintent, usernoun, userentity);	/*	asks for user input IF usernoun is declared, then call knowledge_put. */
+			}
+			if (strcmp(userresponse_notfound, "") == 0) {
+				strcpy(response, "-(");
+			}
+			else {
+
+				/* Calls knowledge_put to insert user response into knowledge base */
+				put_reply_code = knowledge_put(userintent, userentity, userresponse_notfound, n, know);		/* Arguments: Intent, Entity, Buffer to store user input */
+				if (put_reply_code == KB_FOUND) {				/* If knowledge_put is successful */
+					snprintf(response, n, "Thank you.");
+				}
+				else if (put_reply_code == KB_NOMEM) {	/* Else if there is insufficient memory */
+					snprintf(response, n, "Memory allocation failure! Failed to create note for:\nIntent '%s'\nEntity '%s'\nResponse '%s'\n", userintent, userentity, userresponse_notfound);
+					exit(1);
+				}
+				else if (put_reply_code == KB_INVALID) {	/* Else if the intent is not valid */
+					snprintf(response, n, "Sorry, I didn't get '%s'.", userintent);
+				}
+			}
 		}
 	}
 	else if (get_reply_code == KB_NOTFOUND) {																			/* If no response could be found, */
