@@ -17,20 +17,20 @@
 #include <string.h>
 #include "chat1002.h"
 
-/*
- * Get the response to a question.
- *
- * Input:
- *   intent   - the question word
- *   entity   - the entity
- *   response - a buffer to receive the response
- *   n        - the maximum number of characters to write to the response buffer
- *
- * Returns:
- *   KB_OK, if a response was found for the intent and entity (the response is copied to the response buffer)
- *   KB_NOTFOUND, if no response could be found
- *   KB_INVALID, if 'intent' is not a recognised question word
- */
+ /*
+  * Get the response to a question.
+  *
+  * Input:
+  *   intent   - the question word
+  *   entity   - the entity
+  *   response - a buffer to receive the response
+  *   n        - the maximum number of characters to write to the response buffer
+  *
+  * Returns:
+  *   KB_OK, if a response was found for the intent and entity (the response is copied to the response buffer)
+  *   KB_NOTFOUND, if no response could be found
+  *   KB_INVALID, if 'intent' is not a recognised question word
+  */
 
 void wordsplit(char* sen, char arr[][MAX_ENTITY], int* len) {
 	int j = 0;
@@ -71,23 +71,30 @@ int knowledge_get(const char* intent, const char* entity, char* response, int n,
 					char nodeEntityArray[MAX_ENTITY][MAX_ENTITY];
 					int nodeEntityLen = 0;
 					wordsplit(now->entity, &nodeEntityArray, &nodeEntityLen);
-					iHighestpossible = questionLen;
+
+					iHighestpossible = 0;
+					if (questionLen > nodeEntityLen)
+						iHighestpossible = questionLen;
+					else
+						iHighestpossible = nodeEntityLen;
+					int pStreak = 0;
 					for (int i = 0; i < questionLen; i++)
 					{
+						int tStreak = 0;
 						for (int x = 0; x < nodeEntityLen; x++)
 						{
 							if (compare_token(questionArray[i], nodeEntityArray[x]) == 0) {
 								iCurrMatch++;
+								tStreak++;
 							}
 						}
-					}
-					if (iCurrMatch == iHighestpossible && nodeEntityLen > questionLen) //if complete match
-					{
-						strncpy(response, now->value, n);
-						return KB_PARTIAL;
+						if (tStreak == 1)
+						{
+							pStreak++;
+						}
 					}
 
-					else if (iCurrMatch == iHighestpossible) //if complete match
+					if (pStreak == iHighestpossible) //if complete match
 					{
 						strncpy(response, now->value, n);
 						return KB_FOUND;
@@ -139,7 +146,7 @@ int knowledge_get(const char* intent, const char* entity, char* response, int n,
  *   KB_NOMEM, if there was a memory allocation failure
  *   KB_INVALID, if the intent is not a valid question word
  */
-int knowledge_put(const char* intent, const char* entity, char* response, int n, Know *know)
+int knowledge_put(const char* intent, const char* entity, char* response, int n, Know* know)
 {
 	/* ===================================================================================================================================== */
 	char temp_BUFFER[MAX_RESPONSE];                                  /* Create a temp buffer for response (needed to call knowledge_get()) */
@@ -183,7 +190,7 @@ int knowledge_put(const char* intent, const char* entity, char* response, int n,
 				strcpy(sknow->value, response);
 				sknow->next = NULL;
 				storeknow->next = sknow; //set new node to the next of the last node
-                
+
 				return KB_FOUND;                                                /* Return code 'KB_OK' which is of value 0 */
 			}
 		}
