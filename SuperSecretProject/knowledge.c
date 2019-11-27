@@ -68,28 +68,30 @@ int knowledge_get(const char* intent, const char* entity, char* response, int n,
 				if (compare_token(now->intent, intent) == 0) {
 					int iCurrMatch = 0;
 					int iHighestpossible = 0;
+					char nodeEntityArray[MAX_ENTITY][MAX_ENTITY];
+					int nodeEntityLen = 0;
+					wordsplit(now->entity, &nodeEntityArray, &nodeEntityLen);
+					iHighestpossible = questionLen;
 					for (int i = 0; i < questionLen; i++)
 					{
-						char nodeEntityArray[MAX_ENTITY][MAX_ENTITY];
-						int nodeEntityLen = 0;
-						wordsplit(now->entity, &nodeEntityArray, &nodeEntityLen);
-						iHighestpossible = nodeEntityLen * questionLen;
 						for (int x = 0; x < nodeEntityLen; x++)
 						{
-							if (compare_token(questionArray[i], nodeEntityArray[x]) == 0)
+							if (compare_token(questionArray[i], nodeEntityArray[x]) == 0) {
 								iCurrMatch++;
+							}
 						}
+					}
+
+					if (iCurrMatch >= iHighestpossible) //if complete match
+					{
+						strncpy(response, now->value, n);
+						return KB_FOUND;
 					}
 
 					if (iCurrMatch > iHighestMatch)
 					{
 						iHighestMatch = iCurrMatch;
 						strncpy(response, now->value, n);        /* Copy it to the response buffer */
-					}
-					if (iCurrMatch == iHighestpossible) //if complete match
-					{
-						strncpy(response, now->value, n);
-						return KB_FOUND;
 					}
 				}
 				now = now->next;                      /* If program did not enter the if statement (no entity match), point the iterator to the next node */
@@ -164,7 +166,7 @@ int knowledge_put(const char* intent, const char* entity, char* response, int n,
 			}
 
 			//  If no existing record of Intent and Entity exists, create & insert the node to the head of 'WHO' linked-list */
-			else if (abs(get_code) == 1) {
+			else if (abs(get_code) == 1 || abs(get_code) == 4) {
 				if (storeknow == NULL) {                                             /* If not enough memory (memory failure) */
 					return KB_NOMEM;                                         /* Return code 'KB_NOMEM' which is of value -4 */
 				}

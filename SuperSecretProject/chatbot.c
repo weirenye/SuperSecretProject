@@ -299,7 +299,7 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
 		else if (compare_token(userresponse_notfound, "yes") == 0) {
 			put_reply_code = knowledge_put(userintent, userentity, chatbot_entity, n, know);
 			if (put_reply_code == KB_FOUND) {				/* If knowledge_put is successful */
-				snprintf(response, n, "Thank yous.");
+				snprintf(response, n, "Thank you.");
 			}
 		}
 		else if (compare_token(userresponse_notfound, "no") == 0) {
