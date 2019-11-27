@@ -16,9 +16,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "chat1002.h"
-#include "knowledge.h"
-
-tKnowledgeItem* database = NULL;
 
 /*
  * Get the response to a question.
@@ -39,18 +36,19 @@ tKnowledgeItem* database = NULL;
 
 int knowledge_get(const char *intent, const char *entity, char *response, int n, Know *know) {
 	
+	Know* now = know;
 	/* ==================================================================================================================================== */
 /* ----------------------------------------------------- If intent=="WHO" ----------------------------------------------------- */
 	if (compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0 || compare_token(intent, "how") == 0 || compare_token(intent, "why") == 0 || compare_token(intent, "when") == 0) {
-		if (know != NULL) {                                    /* Point the whoIterator to head of 'WHO' linked-list */
+		if (now != NULL) {                                    /* Point the whoIterator to head of 'WHO' linked-list */
 			do {                                                     /* While no match is found, Make the iterator point to the next node (if last node, it will point to NULL) */
-				if (compare_token(know->intent, intent) == 0 && compare_token(know->entity, entity) == 0) {         /* If a node with the same entity exists */
-					strncpy(response, know->value, n);        /* Copy it to the response buffer */
+				if (compare_token(now->intent, intent) == 0 && compare_token(now->entity, entity) == 0) {         /* If a node with the same entity exists */
+					strncpy(response, now->value, n);        /* Copy it to the response buffer */
 					return KB_FOUND;                                   /* After copying to response buffer, return KB_OK (0) */
 				}
 
-				know = know->next;                      /* If program did not enter the if statement (no entity match), point the iterator to the next node */
-			} while (know);//
+				now = now->next;                      /* If program did not enter the if statement (no entity match), point the iterator to the next node */
+			} while (now);//
 
 			/* If code reaches this point, it means that after iterating through all nodes in Linked-list, no match was found */
 			/* Hence, return a KB_NOTFOUND code (-1), this makes chatbot_do_question invoke knowledge_put() */
