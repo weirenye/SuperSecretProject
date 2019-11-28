@@ -293,10 +293,7 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
 	}
 	else if (get_reply_code == KB_PARTIAL) {
 		prompt_user(userresponse_notfound, MAX_INPUT, "I'm sure if you mean %s? if so, please type yes, if not, no", chatbot_entity);/* If a response was found for the intent and entity, */
-		if (compare_token(userresponse_notfound, "") == 0) {
-			strcpy(response, "-(");
-		}
-		else if (compare_token(userresponse_notfound, "yes") == 0) {
+		if (compare_token(userresponse_notfound, "yes") == 0) {
 			put_reply_code = knowledge_put(userintent, userentity, chatbot_entity, n, know);
 			if (put_reply_code == KB_FOUND) {				/* If knowledge_put is successful */
 				snprintf(response, n, "Thank you.");
@@ -327,6 +324,9 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
 					snprintf(response, n, "Sorry, I didn't get '%s'.", userintent);
 				}
 			}
+		}
+		else {
+			strcpy(response, "-(");
 		}
 	}
 	else if (get_reply_code == KB_NOTFOUND) {																			/* If no response could be found, */
