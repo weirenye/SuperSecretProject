@@ -165,22 +165,19 @@ int knowledge_put(const char* intent, const char* entity, char* response, int n,
 	else {
 		/* -------------------------------------------------- Intent == 'WHO' ----------------------------------------------------------------- */
 		if (compare_token(intent, "what") == 0 || compare_token(intent, "where") == 0 || compare_token(intent, "who") == 0 || compare_token(intent, "how") == 0 || compare_token(intent, "why") == 0 || compare_token(intent, "when") == 0) {                    /* If intent is 'WHO' */
-			//  If Intent and Entity pair already exists, iterate the 'WHO' linked-list & overwrite current response data
-			if (abs(get_code) == 0) {                                    /* Point the whoIterator to head of 'WHO' linked-list */
-				do {                                                          /* While no match is found, Make the iterator point to the next node (if last node, it will point to NULL) */
+			if (abs(get_code) == 0) {                          
+				do {                                                         
 					if (compare_token(storeknow->entity, entity) == 0) {              /* If a node with the same Entity exists */
 						strncpy(storeknow->value, response, MAX_RESPONSE);        /* Overwrite the existing response */
-						return KB_FOUND;                                        /* Return code 'KB_OK', which is of value 0 */
+						return KB_FOUND;                     
 					}
 
 					storeknow = storeknow->next;
 				} while (storeknow != NULL);
 			}
-
-			//  If no existing record of Intent and Entity exists, create & insert the node to the head of 'WHO' linked-list */
 			else if (abs(get_code) == 1 || abs(get_code) == 4) {
 				if (storeknow == NULL) {                                             /* If not enough memory (memory failure) */
-					return KB_NOMEM;                                         /* Return code 'KB_NOMEM' which is of value -4 */
+					return KB_NOMEM;                             
 				}
 				while (storeknow->next != NULL) //skip to the last node
 					storeknow = storeknow->next;
@@ -191,7 +188,7 @@ int knowledge_put(const char* intent, const char* entity, char* response, int n,
 				sknow->next = NULL;
 				storeknow->next = sknow; //set new node to the next of the last node
 
-				return KB_FOUND;                                                /* Return code 'KB_OK' which is of value 0 */
+				return KB_FOUND;   
 			}
 		}
 	}

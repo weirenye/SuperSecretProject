@@ -301,10 +301,10 @@ int chatbot_do_question(int inc, char* inv[], char* response, int n, Know* know)
 		}
 		else if (compare_token(userresponse_notfound, "no") == 0) {
 			if (compare_token(usernoun, "\0") == 0) {
-				prompt_user(userresponse_notfound, MAX_INPUT, "I don't know. %s %s?", userintent, userentity);				/*	asks for user input IF usernoun is not declared, then call knowledge_put. */
+				prompt_user(userresponse_notfound, MAX_INPUT, "I don't know. %s %s?", userintent, userentity);
 			}
 			else {
-				prompt_user(userresponse_notfound, MAX_INPUT, "I don't know. %s %s %s?", userintent, usernoun, userentity);	/*	asks for user input IF usernoun is declared, then call knowledge_put. */
+				prompt_user(userresponse_notfound, MAX_INPUT, "I don't know. %s %s %s?", userintent, usernoun, userentity);
 			}
 			if (strcmp(userresponse_notfound, "") == 0) {
 				strcpy(response, "-(");
